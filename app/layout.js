@@ -1,10 +1,5 @@
-import { Rubik } from "next/font/google";
 import "./globals.css";
-const rubik = Rubik({
-  subsets: ["latin"],
-  variable: "--font-rubik",
-  weight: ["400", "700"],
-});
+
 
 export const metadata = {
   title: "Vismo | High-Quality Video Calling App",
@@ -14,7 +9,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" dir="rtl">
-      <body className={`${rubik.variable} antialiased bg-dark-2 text-white`}>
+      <body className={` antialiased bg-dark-2 text-white`}>
         <div className="min-h-screen flex flex-col justify-between">
           <main className="flex-grow overflow-auto">
             {children}
