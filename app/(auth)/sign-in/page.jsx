@@ -44,10 +44,12 @@ const SignIn = () => {
 
             if (response.ok) {
                 const result = await response.json();
-                toast.success(result.message);  // Show success toast
+                toast.success(result.message);
+                localStorage.setItem("token", result.token);
+                window.location.href = "/";
             } else {
                 const error = await response.json();
-                toast.error(error.message);  // Show error toast if any
+                toast.error(error.message);
             }
         } catch (error) {
             toast.error("خطا در ورود رخ داده است. لطفا دوباره تلاش کنید.");
