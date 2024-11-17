@@ -1,6 +1,8 @@
+'use client'
+
 import Navbar from "@/components/Navbar"
 import Sidebar from "@/components/Sidebar"
-
+import { Toaster } from "sonner"
 
 
 const HomeLayout = ({ children }) => {
@@ -17,6 +19,7 @@ const HomeLayout = ({ children }) => {
                     </div>
                 </section>
             </div>
+            <Toaster position="top-right" richColors />
 
         </main>
 

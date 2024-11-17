@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import SiginSignupLinks from "./SiginSignupLinks";
 import api from "@/helpers/cookieHelper";
 const Navbar = () => {
-    const [err, serErr] = useState(null);
+    const [err, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
     const [isSignedIn, setIsSigedIn] = useState(false)

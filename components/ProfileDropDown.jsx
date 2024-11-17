@@ -36,13 +36,23 @@ import {
 import { useDropzone } from "react-dropzone";
 import { useState } from "react";
 import Image from "next/image";
+import api from '@/helpers/cookieHelper';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 export function ProfileDropDown({ userData }) {
     const [files, setFiles] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
+    const router = useRouter()
+    const onSubmit = async () => {
+        try {
+            await api.post('/auth/logout')
+            router.push('/sign-in')
+        } catch (error) {
+            toast.error('خطایی در خروج از حساب رخ داد')
+        }
+    }
     const onDrop = (acceptedFiles, rejectedFiles) => {
-        // Reset error message on every new drop
         setErrorMessage("");
-        // Handle rejected files
         if (rejectedFiles.length > 0) {
             const error = rejectedFiles[0].errors[0];
             if (error.code === "file-too-large") {
@@ -52,11 +62,9 @@ export function ProfileDropDown({ userData }) {
             }
             return;
         }
-        // Log the files to debug
         console.log("Accepted files:", acceptedFiles);
         console.log("Rejected files:", rejectedFiles);
 
-        // If there are valid image files, process them
         if (acceptedFiles.length > 0) {
             const processedFiles = acceptedFiles.map((file) =>
                 Object.assign(file, {
@@ -154,6 +162,7 @@ export function ProfileDropDown({ userData }) {
                 <DropdownMenuItem className=" justify-center">
                     <Button
                         className="bg-danger"
+                        onClick={onSubmit}
                     >
                         <LogOut />
                         خروج از حساب

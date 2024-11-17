@@ -129,7 +129,8 @@ export const refreshAccessToken = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
-    res.status(200).json({ message: 'خروج با موفقیت انجام شد' });
+    console.log('your logged out i hopw')
+    res.clearCookie('accessToken', { path: '/', httpOnly: true, });//TODO dont forget secure: true, sameSite: 'strict' 
+    res.clearCookie('refreshToken', { path: '/', httpOnly: true, });
+    res.status(200).json({ message: 'Logged out successfully' });
 };

@@ -5,7 +5,9 @@ dotenv.config();
 
 const authMiddleware = (req, res, next) => {
     const token = req.cookies.accessToken;
+    console.log(token)
     if (!token) {
+        console.log('token has expired')
         return res.status(401).json({ message: 'token has expired' });
     }
     try {

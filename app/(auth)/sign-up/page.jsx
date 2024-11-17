@@ -74,27 +74,29 @@ const Signup = () => {
 
     return (
         <section className="h-screen flex items-center justify-center">
-            <Card className="w-[300px] md:w-[500px]">
+            <Card className="w-[300px] h-[550px]  md:w-[500px] md:h-[670px]">
                 <CardHeader className="flex items-center">
-                    <Link href="/" className=" gap-1">
-                        <Image
-                            src={"/icons/logo-black.svg"}
-                            width={64}
-                            height={400}
-                            alt="Vismo Logo"
-                            className="max-sm:size-10"
-                            style={{ userSelect: "none", pointerEvents: "none" }}
-                        />
+                    <div className="hidden md:block">
+                        <Link href="/" className=" ">
+                            <Image
+                                src={"/icons/logo-black.svg"}
+                                width={64}
+                                height={400}
+                                alt="Vismo Logo"
+                                className="max-sm:size-10"
+                                style={{ userSelect: "none", pointerEvents: "none" }}
+                            />
+                        </Link>
+                    </div>
 
-                    </Link>
                     <CardTitle>
                         ساخت حساب کاربری
                     </CardTitle>
-                    <CardDescription className="flex items-center">فقط با چند کلیک با دوستان خود در هرجای جهان ارتباط برقرار کنید  (بلاخص در فرانسه)</CardDescription>
+                    <CardDescription className="flex items-center md:block hidden"> با کیفیت بالا و بدون دردسر، تماس‌های تصویری برقرار کنید و از تجربه‌ای سریع و کاربرپسند لذت ببرید.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <div className="grid w-full items-center gap-4">
+                        <div className=" md:grid w-full items-center gap-4">
                             <div className="md:grid grid-cols-2 gap-2 transition-all duration-300">
                                 {/* Firstname Field */}
                                 <div className="flex flex-col space-y-1.5">
@@ -186,7 +188,7 @@ const Signup = () => {
                 </CardContent>
                 <CardFooter className="flex min-w-full">
                     <p className="text-[12px]">
-                        حساب کاربری داری؟ <Link href={"/sign-in"} className=" text-blue-600 underline underline-offset-4 font-semibold ">
+                        حساب کاربری داری؟ <Link href={"/sign-in"} className=" text-blue-600 underline font-semibold ">
                             وارد شو
                         </Link>
                     </p>
