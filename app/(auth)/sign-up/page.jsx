@@ -1,7 +1,6 @@
 "use client"
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
@@ -11,14 +10,12 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";  // Import toast from Sonner
+import { toast, Toaster } from "sonner";
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Link from "next/link";
 import Image from "next/image";
 
-
-// Validation schema using Yup
 const validationSchema = Yup.object({
     username: Yup.string()
         .required("نام کاربری الزامی است")
@@ -31,7 +28,17 @@ const validationSchema = Yup.object({
         .required("رمز عبور الزامی است")
         .min(6, "رمز عبور باید حداقل 6 کاراکتر باشد")
         .max(20, "رمز عبور نباید بیشتر از 20 کاراکتر باشد"),
+    confirmPassword: Yup.string()
+        .required("تکرار رمز عبور الزامی است")
+        .oneOf([Yup.ref('password'), null], 'رمز عبور ها باید یکسان باشند'),
+    firstname: Yup.string()
+        .required("نام الزامی است")
+        .min(2, "نام باید حداقل 2 حرف باشد"),
+    lastname: Yup.string()
+        .required("نام خانوادگی الزامی است")
+        .min(2, "نام خانوادگی باید حداقل 2 حرف باشد"),
 });
+
 
 const Signup = () => {
     // Initialize react-hook-form with Yup validation
@@ -67,12 +74,12 @@ const Signup = () => {
 
     return (
         <section className="h-screen flex items-center justify-center">
-            <Card className="w-[350px] ">
+            <Card className="w-[300px] md:w-[500px]">
                 <CardHeader className="flex items-center">
                     <Link href="/" className=" gap-1">
                         <Image
                             src={"/icons/logo-black.svg"}
-                            width={96}
+                            width={64}
                             height={400}
                             alt="Vismo Logo"
                             className="max-sm:size-10"
@@ -88,6 +95,33 @@ const Signup = () => {
                 <CardContent>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="grid w-full items-center gap-4">
+                            <div className="md:grid grid-cols-2 gap-2 transition-all duration-300">
+                                {/* Firstname Field */}
+                                <div className="flex flex-col space-y-1.5">
+                                    <Label htmlFor="firstname">نام</Label>
+                                    <Input
+                                        id="firstname"
+                                        placeholder="نام خود را وارد کنید"
+                                        {...register("firstname")}
+                                    />
+                                    {errors.firstname && (
+                                        <span className="text-red-500 text-sm">{errors.firstname.message}</span>
+                                    )}
+                                </div>
+
+                                {/* Lastname Field */}
+                                <div className="block md:flex md:flex-col md:space-y-1.5">
+                                    <Label htmlFor="lastname">نام خانوادگی</Label>
+                                    <Input
+                                        id="lastname"
+                                        placeholder="نام خانوادگی خود را وارد کنید"
+                                        {...register("lastname")}
+                                    />
+                                    {errors.lastname && (
+                                        <span className="text-red-500 text-sm">{errors.lastname.message}</span>
+                                    )}
+                                </div>
+                            </div>
                             {/* Username Field */}
                             <div className="flex flex-col space-y-1.5">
                                 <Label htmlFor="username">نام کاربری</Label>
@@ -100,6 +134,8 @@ const Signup = () => {
                                     <span className="text-red-500 text-sm">{errors.username.message}</span>
                                 )}
                             </div>
+
+
 
                             {/* Email Field */}
                             <div className="flex flex-col space-y-1.5">
@@ -128,11 +164,25 @@ const Signup = () => {
                                     <span className="text-red-500 text-sm">{errors.password.message}</span>
                                 )}
                             </div>
-                        </div>
 
+                            {/* Confirm Password Field */}
+                            <div className="flex flex-col space-y-1.5">
+                                <Label htmlFor="confirmPassword">تکرار رمز عبور</Label>
+                                <Input
+                                    id="confirmPassword"
+                                    type="password"
+                                    placeholder="تکرار رمز عبور را وارد کنید"
+                                    {...register("confirmPassword")}
+                                />
+                                {errors.confirmPassword && (
+                                    <span className="text-red-500 text-sm">{errors.confirmPassword.message}</span>
+                                )}
+                            </div>
+                        </div>
 
                         <button type="submit" className="mt-4 w-full py-2 w-full bg-dark-2 rounded-md text-white hover:bg-[#191919] transition-all duration-300">ورود</button>
                     </form>
+
                 </CardContent>
                 <CardFooter className="flex min-w-full">
                     <p className="text-[12px]">
@@ -142,6 +192,8 @@ const Signup = () => {
                     </p>
                 </CardFooter>
             </Card>
+            <Toaster position="top-right" richColors />
+
 
         </section>
     );

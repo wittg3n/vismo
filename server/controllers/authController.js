@@ -1,12 +1,11 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import dotenv from 'dotenv';
-
+import { generateRefreshToken, generateAccessToken } from '../helpers/token.js';
 dotenv.config();
 
 export const signUp = async (req, res) => {
-    const { username, email, password } = req.body;
-    console.log({ username, email, password });
+    const { username, email, password, firstname, lastname } = req.body;
 
     try {
         const existingEmail = await User.findOne({ email });
@@ -19,25 +18,36 @@ export const signUp = async (req, res) => {
             return res.status(400).json({ message: 'این نام کاربری قبلاً استفاده شده است.' });
         }
 
-        const newUser = new User({ username, email, password });
+        const newUser = new User({ username, email, password, firstname, lastname });
 
         await newUser.save();
 
-        const token = jwt.sign(
-            { id: newUser._id, email: newUser.email },
-            process.env.JWT_SECRET,
-            { expiresIn: '1d' }
-        );
+        const accessToken = generateAccessToken(newUser);
+        const refreshToken = generateRefreshToken(newUser);
+
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production',
+            maxAge: 15 * 60 * 1000,
+        });
+
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
 
         res.status(201).json({
             message: 'حساب کاربری با موفقیت ساخته شد',
-            token
         });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'خطا در ثبت نام رخ داده است.' });
     }
 };
+
 export const login = async (req, res) => {
     const { email, password } = req.body;
 
@@ -51,29 +61,75 @@ export const login = async (req, res) => {
         if (!isPasswordValid) {
             return res.status(400).json({ message: 'رمز عبور اشتباه است.' });
         }
-        //TODO make two seporate jwt check helpers
-        const token = jwt.sign(
-            { id: user._id, email: user.email },
-            process.env.JWT_SECRET,
-            { expiresIn: '1d' }
-        );
 
+        const accessToken = generateAccessToken(user);
+        const refreshToken = generateRefreshToken(user);
+
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production',
+            maxAge: 15 * 60 * 1000,
+        });
+
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+        console
         res.status(200).json({
             message: 'ورود با موفقیت انجام شد',
-            token
         });
     } catch (error) {
-        console.log(asdas);
+        console.error(error);
         res.status(500).json({ message: 'خطا در ورود رخ داده است. لطفاً دوباره تلاش کنید.' });
     }
 };
 
-
 export const deleteAccount = async (req, res) => {
     try {
         await User.findByIdAndDelete(req.user.id);
-        res.status(200).json({ message: 'Account deleted successfully' });
+        res.status(200).json({ message: 'حساب با موفقیت حذف شد.' });
     } catch (error) {
-        res.status(500).json({ message: 'Error deleting account' });
+        res.status(500).json({ message: 'خطا در حذف حساب کاربری.' });
     }
+};
+
+export const refreshAccessToken = async (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+    console.log(refreshToken)
+    if (!refreshToken) {
+        return res.status(401).json({ message: 'توکن بازنشانی دریافت نشد. لطفاً وارد شوید.' });
+    }
+
+    try {
+        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+
+        const user = await User.findById(decoded.id);
+        if (!user) {
+            return res.status(404).json({ message: 'کاربر پیدا نشد.' });
+        }
+
+        const newAccessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '15m' });
+
+        res.cookie('accessToken', newAccessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 15 * 60 * 1000,
+        });
+
+        res.status(200).json({ message: 'توکن جدید صادر شد.' });
+    } catch (err) {
+        console.error(err);
+        res.status(403).json({ message: 'توکن بازنشانی نامعتبر یا منقضی شده است.' });
+    }
+};
+
+export const logout = (req, res) => {
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    res.status(200).json({ message: 'خروج با موفقیت انجام شد' });
 };

@@ -36,15 +36,12 @@ import {
 import { useDropzone } from "react-dropzone";
 import { useState } from "react";
 import Image from "next/image";
-
-export function ProfileDropDown() {
+export function ProfileDropDown({ userData }) {
     const [files, setFiles] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
-
     const onDrop = (acceptedFiles, rejectedFiles) => {
         // Reset error message on every new drop
         setErrorMessage("");
-
         // Handle rejected files
         if (rejectedFiles.length > 0) {
             const error = rejectedFiles[0].errors[0];
@@ -55,7 +52,6 @@ export function ProfileDropDown() {
             }
             return;
         }
-
         // Log the files to debug
         console.log("Accepted files:", acceptedFiles);
         console.log("Rejected files:", rejectedFiles);
@@ -72,7 +68,6 @@ export function ProfileDropDown() {
             setErrorMessage("فایل‌های آپلود شده معتبر نیستند.");
         }
     };
-
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         accept: {
@@ -82,19 +77,18 @@ export function ProfileDropDown() {
         multiple: false, // Limit to one file
         maxSize: 5 * 1024 * 1024, // 5MB limit
     });
-
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Avatar className="h-9 w-9 cursor-pointer">
-                    <AvatarImage src="/icons/profile.svg" alt="profile" />
+                    <AvatarImage src={userData?.avatar || "/icons/profile.svg"} alt="profile" />
                     <AvatarFallback>JP</AvatarFallback>
                 </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-40" dir="rtl">
                 <DropdownMenuGroup>
                     <DropdownMenuItem className="font-bold text-lg text-right">
-                        خشایار مافی
+                        {userData.firstname + ' ' + userData.lastname}
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem >
@@ -129,13 +123,11 @@ export function ProfileDropDown() {
                                                 </p>
                                             )}
                                         </div>
-
                                         {errorMessage && (
                                             <p className="text-red-500 text-sm text-center mt-2">
                                                 {errorMessage}
                                             </p>
                                         )}
-
                                         {files.map((file) => (
                                             <div key={file.name} className="w-full">
                                                 <Image
@@ -158,7 +150,6 @@ export function ProfileDropDown() {
                         </Dialog>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
-
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className=" justify-center">
                     <Button
