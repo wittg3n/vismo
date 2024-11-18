@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "server": "nodemon server/server.js"
+    "server": "nodemon "
   },
   "type": "module",
   "dependencies": {

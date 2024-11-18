@@ -5,7 +5,7 @@ const SiginSignupLinks = () => {
     return (
         <section className="text-[12px] font-light">
 
-            <Link href={"/sign-up"}>
+            <Link href={"/sign-in"}>
                 <LogIn />
             </Link>
         </section>

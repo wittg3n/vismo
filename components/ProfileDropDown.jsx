@@ -14,16 +14,9 @@ import {
     DropdownMenuContent,
     DropdownMenuGroup,
     DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuPortal,
     DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import Link from "next/link";
 import {
     Dialog,
     DialogContent,
@@ -36,21 +29,40 @@ import {
 import { useDropzone } from "react-dropzone";
 import { useState } from "react";
 import Image from "next/image";
-import api from '@/helpers/cookieHelper';
+import { uploadAvatar } from '@/helpers/uploadAvatar';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import api from '@/helpers/cookieHelper';
+
+
 export function ProfileDropDown({ userData }) {
     const [files, setFiles] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
-    const router = useRouter()
-    const onSubmit = async () => {
+    const router = useRouter();
+    const onLogout = async () => {
         try {
             await api.post('/auth/logout')
             router.push('/sign-in')
         } catch (error) {
+            console.log(error)
             toast.error('خطایی در خروج از حساب رخ داد')
         }
     }
+    const onSubmit = async () => {
+        if (files.length > 0) {
+            const result = await uploadAvatar(files[0]);
+
+            if (result.success) {
+                toast.success("آواتار با موفقیت به روز شد");
+                router.refresh();
+            } else {
+                toast.error("خطا در آپلود آواتار: " + result.error);
+            }
+        } else {
+            toast.error("لطفاً یک فایل انتخاب کنید.");
+        }
+    };
+
     const onDrop = (acceptedFiles, rejectedFiles) => {
         setErrorMessage("");
         if (rejectedFiles.length > 0) {
@@ -62,9 +74,6 @@ export function ProfileDropDown({ userData }) {
             }
             return;
         }
-        console.log("Accepted files:", acceptedFiles);
-        console.log("Rejected files:", rejectedFiles);
-
         if (acceptedFiles.length > 0) {
             const processedFiles = acceptedFiles.map((file) =>
                 Object.assign(file, {
@@ -76,6 +85,7 @@ export function ProfileDropDown({ userData }) {
             setErrorMessage("فایل‌های آپلود شده معتبر نیستند.");
         }
     };
+
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         accept: {
@@ -85,90 +95,89 @@ export function ProfileDropDown({ userData }) {
         multiple: false, // Limit to one file
         maxSize: 5 * 1024 * 1024, // 5MB limit
     });
+
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Avatar className="h-9 w-9 cursor-pointer">
-                    <AvatarImage src={userData?.avatar || "/icons/profile.svg"} alt="profile" />
-                    <AvatarFallback>JP</AvatarFallback>
-                </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-40" dir="rtl">
-                <DropdownMenuGroup>
-                    <DropdownMenuItem className="font-bold text-lg text-right">
-                        {userData.firstname + ' ' + userData.lastname}
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem >
-                        <Dialog >
-                            <DialogTrigger className="w-full" >
-                                <Link href="#" className="text-sm  ">
-                                    تغییر آواتار
-                                </Link>
+        <Dialog >
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Avatar className="h-9 w-9 cursor-pointer">
+                        <AvatarImage src={userData?.avatar || "/icons/profile.svg"} alt="profile" />
+                        <AvatarFallback>JP</AvatarFallback>
+                    </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-40" dir="rtl">
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem className="font-bold text-lg text-right">
+                            {userData.firstname + ' ' + userData.lastname}
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem >
+                            <DialogTrigger className="w-full" asChild >
+                                <div className='flex cursor-pointer'> <span className="ml-2"><UserPen /></span>  ویرایش حساب</div>
                             </DialogTrigger>
-                            <DialogContent className="sm:max-w-[425px] bg-dark-1">
-                                <DialogHeader className="text-right">
-                                    <DialogTitle>تغییر آواتار</DialogTitle>
-                                    <DialogDescription>
-                                        آواتار خود را بارگذاری کنید
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <div className="grid gap-4">
-                                    <div className="grid grid-cols-2 gap-2">
-                                        <div
-                                            {...getRootProps()}
-                                            className={` cursor-pointer bg-dark-2 p-4 rounded-md ${isDragActive ? "border-blue-500" : "border-gray-300"
-                                                }`}
-                                        >
-                                            <input {...getInputProps()} id="avatar-upload" />
-                                            {isDragActive ? (
-                                                <p className="text-center text-sm text-blue-500">
-                                                    فایل را اینجا رها کنید...
-                                                </p>
-                                            ) : (
-                                                <p className="text-center text-sm text-gray-400 ">
-                                                    برای آپلود تصویر اینجا کلیک کنید یا فایل را بکشید و رها کنید
-                                                </p>
-                                            )}
-                                        </div>
-                                        {errorMessage && (
-                                            <p className="text-red-500 text-sm text-center mt-2">
-                                                {errorMessage}
-                                            </p>
-                                        )}
-                                        {files.map((file) => (
-                                            <div key={file.name} className="w-full">
-                                                <Image
-                                                    src={file.preview}
-                                                    alt={file.name}
-                                                    className="rounded-md object-cover"
-                                                    width={220}
-                                                    height={110}
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                                <DialogFooter>
-                                    <Button type="submit" className="w-full bg-white text-dark-2 hover:bg-green-1 transition-all duration-500">
-                                        ذخیره
-                                    </Button>
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className=" justify-center">
+                        <Button
+                            className="bg-dark-2"
+                            onClick={onLogout}
+                        >
+                            <LogOut />
+                            خروج از حساب
+                        </Button>
                     </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className=" justify-center">
-                    <Button
-                        className="bg-danger"
-                        onClick={onSubmit}
-                    >
-                        <LogOut />
-                        خروج از حساب
+                </DropdownMenuContent>
+            </DropdownMenu>
+            <DialogContent className="sm:max-w-[425px] bg-dark-1">
+                <DialogHeader className="text-right">
+                    <DialogTitle>تغییر آواتار</DialogTitle>
+                    <DialogDescription>
+                        آواتار خود را بارگذاری کنید
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4">
+                    <div className="grid grid-cols-2 gap-2">
+                        <div
+                            {...getRootProps()}
+                            className={` cursor-pointer bg-dark-2 p-4 rounded-md ${isDragActive ? "border-blue-500" : "border-gray-300"
+                                }`}
+                        >
+                            <input {...getInputProps()} id="avatar-upload" />
+                            {isDragActive ? (
+                                <p className="text-center text-sm text-blue-500">
+                                    فایل را اینجا رها کنید...
+                                </p>
+                            ) : (
+                                <p className="text-center text-sm text-gray-400 ">
+                                    برای آپلود تصویر اینجا کلیک کنید یا فایل را بکشید و رها کنید
+                                </p>
+                            )}
+                        </div>
+                        {errorMessage && (
+                            <p className="text-red-500 text-sm text-center mt-2">
+                                {errorMessage}
+                            </p>
+                        )}
+                        {files.map((file) =>
+                            <div key={file.name} className="w-full">
+                                <Image
+                                    src={file.preview}
+                                    alt={file.name}
+                                    className="rounded-md object-cover"
+                                    width={220}
+                                    height={110}
+                                />
+                            </div>
+                        )}
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button type="submit" className="w-full bg-white text-dark-2 hover:bg-green-1 transition-all duration-500" onClick={onSubmit}>
+                        ذخیره
                     </Button>
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 }

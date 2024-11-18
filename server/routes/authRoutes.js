@@ -1,6 +1,6 @@
 import express from 'express';
 import passport from 'passport';
-import { signUp, login, deleteAccount, refreshAccessToken, logout } from '../controllers/authController.js';
+import { signUp, login, deleteAccount, refreshAccessToken, logout, validateCookie } from '../controllers/authController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -10,5 +10,6 @@ router.post('/login', passport.authenticate('local', { session: false }), login)
 router.post('/logout', authMiddleware, logout);
 router.delete('/delete', authMiddleware, deleteAccount);
 router.post('/refresh-token', refreshAccessToken)
+router.post('/validate-cookie', validateCookie)
 
 export default router;

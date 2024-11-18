@@ -43,7 +43,6 @@ export const signUp = async (req, res) => {
             message: 'حساب کاربری با موفقیت ساخته شد',
         });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'خطا در ثبت نام رخ داده است.' });
     }
 };
@@ -83,7 +82,6 @@ export const login = async (req, res) => {
             message: 'ورود با موفقیت انجام شد',
         });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'خطا در ورود رخ داده است. لطفاً دوباره تلاش کنید.' });
     }
 };
@@ -99,7 +97,6 @@ export const deleteAccount = async (req, res) => {
 
 export const refreshAccessToken = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
-    console.log(refreshToken)
     if (!refreshToken) {
         return res.status(401).json({ message: 'توکن بازنشانی دریافت نشد. لطفاً وارد شوید.' });
     }
@@ -123,14 +120,27 @@ export const refreshAccessToken = async (req, res) => {
 
         res.status(200).json({ message: 'توکن جدید صادر شد.' });
     } catch (err) {
-        console.error(err);
         res.status(403).json({ message: 'توکن بازنشانی نامعتبر یا منقضی شده است.' });
     }
 };
 
 export const logout = (req, res) => {
-    console.log('your logged out i hopw')
     res.clearCookie('accessToken', { path: '/', httpOnly: true, });//TODO dont forget secure: true, sameSite: 'strict' 
     res.clearCookie('refreshToken', { path: '/', httpOnly: true, });
     res.status(200).json({ message: 'Logged out successfully' });
 };
+export const validateCookie = async (req, res) => {
+    try {
+        const token = await req.cookies.refreshToken;
+        console('this is in validateCookie: ', token)
+        if (!token) {
+            res.status(200).json({
+                'message': 'ok'
+            })
+        }
+    } catch (error) {
+        res.status(401).json({
+            'message': error
+        })
+    }
+}

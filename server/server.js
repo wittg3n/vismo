@@ -5,23 +5,27 @@ import connectDB from './config/db.js';
 import './config/passport.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-import cors from "cors"
+import cors from "cors";
+import path from 'path';
+import cookieparser from 'cookie-parser';
 dotenv.config();
-const app = express()
-import cookieparser from 'cookie-parser'
+const app = express();
 
 const corsOptions = {
     origin: 'http://localhost:3000', // Frontend URL
     credentials: true,               // Allow sending cookies
 };
 
-app.use(cors(corsOptions));
-app.disable('x-powered-by') //sum security fucks
-app.use(express.json()); //json parser
-app.use(passport.initialize()); //passport
-app.use(cookieparser()); //cookie parser
-connectDB();
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
+app.use(cors(corsOptions));
+app.disable('x-powered-by'); // For security
+app.use(express.json()); // JSON parser
+app.use(passport.initialize()); // Passport initialization
+app.use(cookieparser()); // Cookie parser
+app.use('/icons', express.static(path.join(__dirname, '../public/icons')));
+
+connectDB();
 
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
