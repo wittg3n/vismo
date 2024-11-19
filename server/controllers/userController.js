@@ -2,14 +2,15 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import dotenv from 'dotenv';
 import multer from 'multer';
-import path from 'path'
+import path from 'path';
+import fs from 'fs';
 dotenv.config();
 
+const __dirname = path.resolve();  // This will give you the absolute path of the current directory
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const uploadPath = path.join(__dirname, '../../public/uploads');
+        const uploadPath = path.join(__dirname, 'public', 'uploads');  // Avoid extra 'E:\'
         if (!fs.existsSync(uploadPath)) {
             fs.mkdirSync(uploadPath, { recursive: true });
         }
@@ -25,7 +26,7 @@ const upload = multer({
     storage,
     limits: { fileSize: 5 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
-        const allowedTypes = /jpeg|png/;
+        const allowedTypes = /jpeg|png|jpg/;
         const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
         const mimetype = allowedTypes.test(file.mimetype);
         if (extname && mimetype) {
@@ -72,6 +73,7 @@ export const uploadAvatar = async (req, res) => {
 
         upload(req, res, async (err) => {
             if (err) {
+                console.log(err);
                 return res.status(400).json({ message: err.message });
             }
 
@@ -85,4 +87,3 @@ export const uploadAvatar = async (req, res) => {
         res.status(403).json({ message: 'خطا در اعتبار سنجی توکن' });
     }
 };
-

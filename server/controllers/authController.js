@@ -49,7 +49,7 @@ export const signUp = async (req, res) => {
 
 export const login = async (req, res) => {
     const { email, password } = req.body;
-
+    console.log("in the login route")
     try {
         const user = await User.findOne({ email });
         if (!user) {
@@ -131,16 +131,22 @@ export const logout = (req, res) => {
 };
 export const validateCookie = async (req, res) => {
     try {
-        const token = await req.cookies.refreshToken;
-        console('this is in validateCookie: ', token)
+        const token = req.cookies.refreshToken;
+        console.log('this is in validateCookie: ', token);
+
         if (!token) {
-            res.status(200).json({
-                'message': 'ok'
-            })
+            return res.status(401).json({
+                message: 'ok'
+            });
         }
+        res.status(200).json({
+            message: 'Token is valid'
+        });
+
     } catch (error) {
-        res.status(401).json({
-            'message': error
-        })
+        console.error('Error during token validation: ', error);
+        res.status(500).json({
+            message: 'Error validating cookie: ' + error.message
+        });
     }
-}
+};

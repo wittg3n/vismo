@@ -34,11 +34,12 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import api from '@/helpers/cookieHelper';
 
-
 export function ProfileDropDown({ userData }) {
     const [files, setFiles] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const router = useRouter();
+
     const onLogout = async () => {
         try {
             await api.post('/auth/logout')
@@ -54,7 +55,8 @@ export function ProfileDropDown({ userData }) {
 
             if (result.success) {
                 toast.success("آواتار با موفقیت به روز شد");
-                router.refresh();
+                setIsDialogOpen(false); // Close the dialog
+                window.location.reload()
             } else {
                 toast.error("خطا در آپلود آواتار: " + result.error);
             }
@@ -97,12 +99,12 @@ export function ProfileDropDown({ userData }) {
     });
 
     return (
-        <Dialog >
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Avatar className="h-9 w-9 cursor-pointer">
-                        <AvatarImage src={userData?.avatar || "/icons/profile.svg"} alt="profile" />
-                        <AvatarFallback>JP</AvatarFallback>
+                        <AvatarImage src={userData.miniAvatar} alt="profile" />
+                        <AvatarFallback className="bg-dark-2">JP</AvatarFallback>
                     </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-40" dir="rtl">
@@ -174,6 +176,7 @@ export function ProfileDropDown({ userData }) {
                 </div>
                 <DialogFooter>
                     <Button type="submit" className="w-full bg-white text-dark-2 hover:bg-green-1 transition-all duration-500" onClick={onSubmit}>
+
                         ذخیره
                     </Button>
                 </DialogFooter>

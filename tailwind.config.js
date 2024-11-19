@@ -8,6 +8,12 @@ module.exports = {
 	],
 	theme: {
 		extend: {
+			animationDelay: {
+				'200': '200ms',
+				'400': '400ms',
+				'600': '600ms',
+				'300': '300ms'
+			},
 			colors: {
 				dark: {
 					'1': '#222725',
@@ -95,11 +101,26 @@ module.exports = {
 					to: {
 						height: '0'
 					}
-				}
+				},
+				spin: {
+					"0%": {
+						transform: "rotate(0)"
+					},
+					"100%": {
+						transform: "rotate(360deg)"
+					}
+				},
+				wave: {
+					"0%": { top: "0", opacity: "1" },
+					"50%": { top: "30px", opacity: "0.2" },
+					"100%": { top: "0", opacity: "1" },
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+
+				wave: "wave 2s ease infinite",
 			}
 		}
 	},

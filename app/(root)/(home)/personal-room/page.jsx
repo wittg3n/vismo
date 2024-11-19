@@ -6,8 +6,7 @@ function PersonalRoom() {
             <h1 className="text-3xl font-bold ">
                 اتاق شخصی
             </h1>
-
         </section>
     )
 }
-export default PersonalRoom
+export default PersonalRoom//TODO fix this spinner

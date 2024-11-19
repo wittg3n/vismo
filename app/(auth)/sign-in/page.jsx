@@ -47,7 +47,8 @@ const SignIn = () => {
             .then(data => {
                 console.log(data)
                 if (data.message == 'ورود با موفقیت انجام شد') {
-                    router.push("/");
+                    console.log("in the push")
+                    router.replace("/");
                 } else {
                     toast.error("Login failed.");
                 }
