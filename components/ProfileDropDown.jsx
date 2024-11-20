@@ -103,14 +103,14 @@ export function ProfileDropDown({ userData }) {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Avatar className="h-9 w-9 cursor-pointer">
-                        <AvatarImage src={userData.miniAvatar} alt="profile" />
+                        <AvatarImage src={userData?.miniAvatar || '/images/avatar-1'} alt="profile" />
                         <AvatarFallback className="bg-dark-2">JP</AvatarFallback>
                     </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-40" dir="rtl">
                     <DropdownMenuGroup>
                         <DropdownMenuItem className="font-bold text-lg text-right">
-                            {userData.firstname + ' ' + userData.lastname}
+                            {userData?.firstname + ' ' + userData.lastname}
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem >

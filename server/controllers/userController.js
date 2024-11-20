@@ -50,7 +50,7 @@ export const getUser = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'کاربر پیدا نشد' });
         }
-
+        console.log(user + "this is user")
         res.status(200).json(user);
     } catch (err) {
         res.status(403).json({ message: 'خطا در اعتبار سنجی توکن' });
@@ -73,7 +73,6 @@ export const uploadAvatar = async (req, res) => {
 
         upload(req, res, async (err) => {
             if (err) {
-                console.log(err);
                 return res.status(400).json({ message: err.message });
             }
 

@@ -49,7 +49,6 @@ export const signUp = async (req, res) => {
 
 export const login = async (req, res) => {
     const { email, password } = req.body;
-    console.log("in the login route")
     try {
         const user = await User.findOne({ email });
         if (!user) {
@@ -77,7 +76,6 @@ export const login = async (req, res) => {
             sameSite: process.env.NODE_ENV === 'production',
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
-        console
         res.status(200).json({
             message: 'ورود با موفقیت انجام شد',
         });
@@ -132,7 +130,6 @@ export const logout = (req, res) => {
 export const validateCookie = async (req, res) => {
     try {
         const token = req.cookies.refreshToken;
-        console.log('this is in validateCookie: ', token);
 
         if (!token) {
             return res.status(401).json({
@@ -144,7 +141,6 @@ export const validateCookie = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Error during token validation: ', error);
         res.status(500).json({
             message: 'Error validating cookie: ' + error.message
         });

@@ -56,6 +56,7 @@
     "express-session": "^1.18.1",
     "helmet": "^8.0.0",
     "input-otp": "^1.4.1",
+    "jalali-moment": "^3.3.11",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",

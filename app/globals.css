@@ -122,73 +122,19 @@ body {
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
+.b-hero {
+  @apply bg-hero;
+}
 
 @layer base {
   * {
     @apply border-border;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
 }
-@layer components {
-  .button-blur {
-    position: relative;
-  }
-}
-@layer components {
-  .button-shadow {
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
-    background: linear-gradient(
-      90deg,
-      hsla(192, 50%, 50%, 1) 0%,
-      hsla(205, 36%, 45%, 1) 100%
-    );
-  }
-
-  .button-shadow::after {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    bottom: -10px;
-    left: 5%;
-    height: 110%;
-    width: 90%;
-    opacity: 0.8;
-    border-radius: 50px;
-    filter: blur(10px);
-    background: linear-gradient(
-      90deg,
-      hsla(192, 50%, 50%, 1) 0%,
-      hsla(205, 36%, 45%, 1) 100%
-    );
-    background: -moz-linear-gradient(
-      90deg,
-      hsla(192, 50%, 50%, 1) 0%,
-      hsla(205, 36%, 45%, 1) 100%
-    );
-    background: -webkit-linear-gradient(
-      90deg,
-      hsla(192, 50%, 50%, 1) 0%,
-      hsla(205, 36%, 45%, 1) 100%
-    );
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#41A6BF", endColorstr="#4A7B9D", GradientType=1);
-
-    filter: blur(10px);
-
-    transition: all 0.2s;
-  }
-
-  .button-shadow:hover::after {
-    filter: blur(8px);
-    opacity: 1;
-  }
-}
-::selection {
-  background-color: #899878;
-  color: white;
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur (4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 .loading {
   display: inline-block;

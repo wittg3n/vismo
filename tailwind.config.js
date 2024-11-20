@@ -20,7 +20,8 @@ module.exports = {
 					'2': '#0E120E'
 				},
 				blue: {
-					'1': '#4A7B9D'
+					'1': '#4A7B9D',
+					'2': '#779FA1'
 				},
 				bright: {
 					'1': '#FBFBFB',
@@ -29,8 +30,15 @@ module.exports = {
 					'1': '#899878'
 				},
 				danger: '#F21B3F',
-				background: 'hsl(var(--background))',
-				foreground: 'hsl(var(--foreground))',
+				red: {
+					'1': '#FF6542'
+				},
+				purple: {
+					'1': '#88498F'
+				},
+				orange: {
+					'1': '#F9A90E '
+				},
 				card: {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
@@ -84,6 +92,9 @@ module.exports = {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
+			},
+			backgroundImage: {
+				hero: "url('/images/hero-background.jpg')",
 			},
 			keyframes: {
 				'accordion-down': {

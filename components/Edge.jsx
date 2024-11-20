@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const Edge = () => {
     return (
-        <section className="relative flex size-full flex-col gap-10">
+        <div className="relative">
 
             <div
                 className="absolute top-[-45px] right-[-25px] hidden md:block"
@@ -16,7 +16,7 @@ const Edge = () => {
                     draggable={false}
                 />
             </div>
-        </section>
+        </div>
     );
 };
 

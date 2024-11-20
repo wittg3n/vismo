@@ -5,31 +5,48 @@ import Link from "next/link";
 import MobileNav from "./mobileNav";
 import { ProfileDropDown } from "./ProfileDropDown";
 import { useState, useEffect } from "react";
-import SiginSignupLinks from "./SiginSignupLinks";
 import api from "@/helpers/cookieHelper";
+import { Skeleton } from "@/components/ui/skeleton"
 const Navbar = () => {
-    const [err, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
+    function delay(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
     const [user, setUser] = useState(null);
-    const [isSignedIn, setIsSigedIn] = useState(false)
 
     useEffect(() => {
+
+        console.log('useEffect called');
         const fetchUser = async () => {
             try {
-                const response = await api.get('/user/get')
-                console.log(response.data)
-                setUser(response.data)
-                setIsSigedIn(true)
+                await delay(600000)
+                const response = await api.get('/user/get');
+                console.log('Full response:', response);
+                if (response.data) {
+                    console.log('User data received:', response.data);
+                    setUser(response.data);
+                } else {
+                    console.log('No user data found');
+                }
             } catch (error) {
-                setError(error)
+                console.error('Error fetching user data:', error);
             }
-            finally {
-                setLoading(false)
-            }
-        }
-        fetchUser()
+        };
+        fetchUser();
     }, []);
+    if (!user) {
+        return (
+            <nav className="fixed top-0 left-0 w-full z-50 bg-dark-1 px-6 py-4 lg:px-10 flex justify-between items-center h-[68px]">
 
+                <Skeleton className={"h-12 w-12 rounded-full"} />
+                <div className="flex items-center gap-5 md:hidden">
+                </div>
+
+                <div className="hidden sm:block">
+                    <Skeleton className="h-8 w-8 rounded-full" />
+                </div>
+            </nav>
+        )
+    }
     return (
         <nav className="fixed top-0 left-0 w-full z-50 bg-dark-1 px-6 py-4 lg:px-10 flex justify-between items-center h-[68px]">
             <Link href="/" className="flex items-center gap-1">
@@ -46,11 +63,8 @@ const Navbar = () => {
             </div>
 
             <div className="hidden sm:block">
-                {isSignedIn ? (
-                    <ProfileDropDown userData={user} />
-                ) : (
-                    <SiginSignupLinks />
-                )}
+                <ProfileDropDown userData={user} />
+
             </div>
         </nav>
     );

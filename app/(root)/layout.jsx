@@ -22,10 +22,8 @@ export default function Layout({ children }) {
 
         if (response.ok) {
           const data = await response.json();
-          console.log('Authentication successful:', data);
           setIsAuthenticated(true);
         } else {
-          console.log('Authentication failed');
           router.push('/sign-in');
         }
       } catch (error) {

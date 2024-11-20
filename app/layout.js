@@ -10,13 +10,9 @@ export default function RootLayout({ children }) {
     <html lang="en" dir="rtl">
       <body className={` antialiased bg-dark-2 text-white`}>
 
-        <div className="min-h-screen flex flex-col justify-between">
+        <div className="min-h-screen flex flex-col justify-between ">
           <main className="flex-grow overflow-auto">{children}</main>
-          <footer
-            className="fixed h-5 w-full bottom-0 flex items-center justify-center text-[10px]"
-          >
-            powerd by WiTTg3N&apos;s wisdom
-          </footer>
+
         </div>
       </body>
     </html>
