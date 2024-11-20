@@ -97,20 +97,20 @@ export function ProfileDropDown({ userData }) {
         multiple: false, // Limit to one file
         maxSize: 5 * 1024 * 1024, // 5MB limit
     });
-
+    const getInitials = (str1, str2) => `${str1[0]} ${str2[0]}`;
     return (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Avatar className="h-9 w-9 cursor-pointer">
                         <AvatarImage src={userData?.miniAvatar || '/images/avatar-1'} alt="profile" />
-                        <AvatarFallback className="bg-dark-2">JP</AvatarFallback>
+                        <AvatarFallback className="bg-dark-2">{getInitials(userData.firstname, userData.lastname)}</AvatarFallback>
                     </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-40" dir="rtl">
                     <DropdownMenuGroup>
                         <DropdownMenuItem className="font-bold text-lg text-right">
-                            {userData?.firstname + ' ' + userData.lastname}
+                            {userData.firstname + ' ' + userData.lastname}
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem >

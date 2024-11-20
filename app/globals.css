@@ -158,3 +158,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+::selection {
+  background-color: #899878; /* Custom background */
+  color: #f5f5f5; /* Light text color */
+}
+
+::-moz-selection {
+  background-color: #899878; /* For Firefox */
+  color: #f5f5f5; /* Light text color */
+}
