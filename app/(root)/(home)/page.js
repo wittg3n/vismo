@@ -2,9 +2,9 @@
 import moment from 'jalali-moment';
 import MeetingTypList from '@/components/MeetingTypList';
 const Home = () => {
-  const now = moment().locale('fa'); // تاریخ جلالی و زبان فارسی
-  const time = now.format('HH:mm'); // زمان به فرمت ۲۴ ساعته
-  const date = now.format('dddd، jD jMMMM jYYYY'); // فرمت تاریخ شمسی
+  const now = moment().locale('fa');
+  const time = now.format('HH:mm');
+  const date = now.format('dddd، jD jMMMM jYYYY');
 
   return (
     <section className="relative flex size-full flex-col gap-10">
@@ -21,6 +21,7 @@ const Home = () => {
         </div>
       </div>
       <MeetingTypList />
+
     </section>
   );
 };

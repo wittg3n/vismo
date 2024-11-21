@@ -15,7 +15,7 @@ export const sidebarLinks = [
         imgUrl: '/icons/previous.svg'
     },
     {
-        label: 'ضبط‌شده‌ها',
+        label: 'تماشا',
         route: '/recordings',
         imgUrl: '/icons/recordings.svg'
     },

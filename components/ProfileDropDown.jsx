@@ -175,7 +175,7 @@ export function ProfileDropDown({ userData }) {
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button type="submit" className="w-full bg-white text-dark-2 hover:bg-green-1 transition-all duration-500" onClick={onSubmit}>
+                    <Button type="submit" className="w-full bg-white text-dark-2 hover:bg-gray-100 transition-all duration-500" onClick={onSubmit}>
 
                         ذخیره
                     </Button>

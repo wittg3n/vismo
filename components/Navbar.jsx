@@ -6,7 +6,8 @@ import MobileNav from "./mobileNav";
 import { ProfileDropDown } from "./ProfileDropDown";
 import { useState, useEffect } from "react";
 import api from "@/helpers/cookieHelper";
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@/components/ui/skeleton";
+
 const Navbar = () => {
     function delay(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
